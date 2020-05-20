@@ -1,0 +1,8 @@
+bin/*
+!bin/.gitkeep
+lambda/bin/*
+!lambda/bin/.gitkeep
+
+.DS_Store
+
+.env
