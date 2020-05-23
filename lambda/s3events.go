@@ -96,7 +96,7 @@ func handler(ctx context.Context, s3Event events.S3Event) error {
 
 		lbls := extractLabels(result)
 		if nil != lbls && 0 < len(lbls) {
-			svc := dynamodb.New(session.New())
+			svc := awsdynamodb.CreateDynamoDBConn(nil)
 
 			if _, err := awsdynamodb.TableExist(svc, tableName); nil != err {
 				attributeDefinitions := []*dynamodb.AttributeDefinition{

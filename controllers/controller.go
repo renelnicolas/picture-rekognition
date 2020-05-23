@@ -109,7 +109,7 @@ func extractIDFromMuxVars(matchVars map[string]string) (int64, error) {
 var fs = http.FileServer(http.Dir("./static"))
 
 // Handlers :
-func Handlers() *mux.Router {
+func Handlers(domain string) *mux.Router {
 	// Main router
 	r := mux.NewRouter()
 
@@ -119,15 +119,16 @@ func Handlers() *mux.Router {
 	r.HandleFunc("/", home.Home).Methods(http.MethodGet, http.MethodHead, http.MethodOptions)
 	r.HandleFunc("/healthz", home.Healtz).Methods(http.MethodGet)
 	r.PathPrefix("/favicon.ico").Handler(http.FileServer(http.Dir("./static")))
-	r.PathPrefix("/static/{alll}").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	r.PathPrefix("/static/{name}.{extension}").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	r.HandleFunc("/.well-known/dnt-policy.txt", home.DNTpolicy).Methods(http.MethodGet)
 
+	apiRoutes := r.Host("api." + domain).PathPrefix("/v1").Subrouter()
+
 	picture := PictureController{}
 
-	r.HandleFunc("/pictures", picture.List).Methods(http.MethodGet)
-	r.HandleFunc("/picture/upload", picture.Upload).Methods(http.MethodPost)
-	r.HandleFunc("/picture/{id}", picture.Edit).Methods(http.MethodGet)
+	apiRoutes.HandleFunc("/pictures", picture.List).Methods(http.MethodGet)
+	apiRoutes.HandleFunc("/picture/upload", picture.Upload).Methods(http.MethodPost)
+	apiRoutes.HandleFunc("/picture/{id}", picture.Edit).Methods(http.MethodGet)
 
 	r.Use(middlewares.Cors)
 	r.Use(middlewares.Logger)

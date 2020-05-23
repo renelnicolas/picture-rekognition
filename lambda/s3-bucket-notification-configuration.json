@@ -1,0 +1,17 @@
+  {
+    "LambdaFunctionConfigurations": [{
+      "LambdaFunctionArn": "function:your-arn-function",
+      "Events": [
+        "s3:ObjectCreated:Put",
+        "s3:ObjectCreated:Post"
+      ],
+      "Filter": {
+        "Key": {
+          "FilterRules": [{
+            "Name": "prefix",
+            "Value": "waiting"
+          }]
+        }
+      }
+    }]
+  }

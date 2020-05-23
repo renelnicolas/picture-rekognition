@@ -109,8 +109,7 @@ func UploadObject(sess *session.Session, fileLocalDir, bucketName, objectKey str
 	fileInfo, _ := file.Stat()
 	size := fileInfo.Size()
 
-	fmt.Println("UploadObject > fileInfo", fileInfo)
-	fmt.Println("UploadObject > size", size)
+	fmt.Printf("UploadObject : %s, %d\n", fileInfo.Name(), size)
 
 	_, err = s3.New(sess).PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(bucketName),
